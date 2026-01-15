@@ -23,28 +23,48 @@ while ($row = $hasil->fetch_assoc()) {
 ?>
 <tr>
     <td><?= $no++ ?></td>
+
+    <!-- DESKRIPSI -->
     <td>
         <strong><?= $row["judul"] ?></strong><br>
-        pada : <?= $row["tanggal"] ?><br>
-        oleh : <?= $row["username"] ?>
+        <small class="text-muted">
+            pada : <?= $row["tanggal"] ?><br>
+            oleh : <?= $row["username"] ?>
+        </small>
     </td>
+
+    <!-- ISI -->
     <td><?= $row["isi"] ?></td>
+
+    <!-- GAMBAR -->
     <td>
-        <?php
-        if ($row["gambar"] != '') {
-            if (file_exists("img/" . $row["gambar"])) {
-                echo '<img src="img/' . $row["gambar"] . '" width="100">';
-            }
-        }
-        ?>
+        <?php if ($row["gambar"] != '' && file_exists("img/" . $row["gambar"])) { ?>
+            <img src="img/<?= $row["gambar"] ?>" width="100">
+        <?php } ?>
     </td>
-    <td>
-        <a href="#" class="badge rounded-pill text-bg-success">
+
+    <!-- AKSI -->
+    <td class="text-center">
+
+        <!-- EDIT -->
+        <a href="admin.php?page=article_edit&id=<?= $row['id'] ?>"
+           class="badge rounded-pill text-bg-success">
             <i class="bi bi-pencil"></i>
         </a>
-        <a href="#" class="badge rounded-pill text-bg-danger">
-            <i class="bi bi-x-circle"></i>
-        </a>
+
+        <!-- HAPUS -->
+        <form method="post"
+              action="admin.php?page=article"
+              class="d-inline">
+            <input type="hidden" name="id" value="<?= $row['id'] ?>">
+            <input type="hidden" name="gambar" value="<?= $row['gambar'] ?>">
+            <button name="hapus"
+                    class="badge rounded-pill text-bg-danger border-0"
+                    onclick="return confirm('Hapus data?')">
+                <i class="bi bi-x-circle"></i>
+            </button>
+        </form>
+
     </td>
 </tr>
 <?php

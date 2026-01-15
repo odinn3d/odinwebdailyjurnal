@@ -82,21 +82,16 @@ $(document).ready(function () {
         });
     }
 
-    // 🔹 load awal (HANYA SEKALI)
     loadData('');
 
-    // 🔹 event pencarian (MINIMAL 3 KARAKTER)
     $("#search").on("keyup", function () {
         let keyword = $(this).val();
 
         if (keyword.length < 3 && keyword.length !== 0) {
-            // ❌ jangan kirim AJAX
+            
             return;
         }
 
-        // ✅ kirim AJAX hanya jika:
-        // - kosong (reset)
-        // - atau >= 3 karakter
         loadData(keyword);
     });
 
@@ -107,7 +102,6 @@ $(document).ready(function () {
 <?php
 include "upload_foto.php";
 
-//jika tombol simpan diklik
 if (isset($_POST['simpan'])) {
     $judul = $_POST['judul'];
     $isi = $_POST['isi'];
@@ -116,18 +110,17 @@ if (isset($_POST['simpan'])) {
     $gambar = '';
     $nama_gambar = $_FILES['gambar']['name'];
 
-    //jika ada file baru yang dikirim  
+    
     if ($nama_gambar != '') {
-        //panggil function upload_foto untuk cek detail file yg diupload user
-        //function ini memiliki keluaran sebuah array yang berisi status dan message
+        
         $cek_upload = upload_foto($_FILES["gambar"]);
 
-        //cek status upload file hasilnya true/false
+        
         if ($cek_upload['status']) {
-            //jika true maka message berisi nama file gambar
+            
             $gambar = $cek_upload['message'];
         } else {
-            //jika true maka message berisi pesan error, tampilkan dalam alert
+            
             echo "<script>
                 alert('" . $cek_upload['message'] . "');
                 document.location='admin.php?page=article';
@@ -136,16 +129,12 @@ if (isset($_POST['simpan'])) {
         }
     }
 
-    //cek apakah ada id yang dikirimkan dari form
     if (isset($_POST['id'])) {
-        //jika ada id, lakukan update data dengan id tersebut
         $id = $_POST['id'];
 
         if ($nama_gambar == '') {
-            //jika tidak ganti gambar
             $gambar = $_POST['gambar_lama'];
         } else {
-            //jika ganti gambar, hapus gambar lama
             unlink("img/" . $_POST['gambar_lama']);
         }
 
@@ -161,7 +150,6 @@ if (isset($_POST['simpan'])) {
         $stmt->bind_param("sssssi", $judul, $isi, $gambar, $tanggal, $username, $id);
         $simpan = $stmt->execute();
     } else {
-		    //jika tidak ada id, lakukan insert data baru
         $stmt = $conn->prepare("INSERT INTO article (judul,isi,gambar,tanggal,username)
                                 VALUES (?,?,?,?,?)");
 
@@ -185,13 +173,11 @@ if (isset($_POST['simpan'])) {
     $conn->close();
 }
 
-    //jika tombol hapus diklik
     if (isset($_POST['hapus'])) {
         $id = $_POST['id'];
         $gambar = $_POST['gambar'];
 
         if ($gambar != '') {
-            //hapus file gambar dari folder /img
             unlink("img/" . $gambar);
         }
 
